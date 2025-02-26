@@ -1,22 +1,21 @@
 * Circuito de Protección de Sobretensión con Diodo Zener 1SMB5929B
 
 
+V1 Vin 0 sin(0 15 2k 0)
+R1 Vin Vk 100
+D1 Va Vk 1SMB5929B
+V2 Va 0 DC 5
+
 .model 1SMB5929B D(IS=1n RS=0.1 CJO=1800p M=0.5 VJ=0.4 ISR=.008u N=1.05 IKF=10u BV=15 NBV=10 IBV=25m TT=40n EG=.84 TRS1=.1m)
 
-V1 Vin 0 sin(0 15 2k 0)
-R1 Vin Va 100
-D1 Va 0 1SMB5929B
-V2 Vk 0 DC 5
-R2 Va 0 10k
-
 .control
-TRAN 1u 5m
-gnuplot graf1 V(Vk) V(Vin) V(Va)
+    TRAN 1u 5m
+    gnuplot graf1 V(Vk) V(Vin) V(Va)
 
-dc V1 -20 20 0.1
-gnuplot graf2 V(Va) V(Vin)
+    dc V1 -20 20 0.1
+    gnuplot graf2 V(Vk) V(Vin)
 
-ac lin 100 1 10k
-gnuplot graf3 V(Va)
+    ac dec 100 1 1k
+    gnuplot graf3 V(Vk)
 .endc
 .end

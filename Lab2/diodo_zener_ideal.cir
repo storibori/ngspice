@@ -1,0 +1,16 @@
+* Simulación de un diodo Zener en Ngspice
+
+.model Diodo D
+
+Vz Vin 0 DC 5V
+D1 Vin Vk Diodo
+D2 0 Vk Diodo
+
+.control
+    TRAN 1u 5m
+    gnuplot graf1 V(Vk) V(Vin)
+
+    dc Vz -40 40 0.1
+    gnuplot graf2 V(Vk) V(Vin)
+.endc
+.end
