@@ -1,0 +1,25 @@
+* Subcircuito para protectores de sobretensiones
+
+.subckt protector_sobretension 1 K 2
+    D1 1 K Diodo
+    D2 K 2 Diodo
+    .model Diodo D
+.ends protector_sobretension
+
+* Definición del protector de sobretensión
+Vz Vin 0 DC 5V
+Xps Vin Vk 0 protector_sobretension
+
+* Análisis de Transitorio
+
+
+*Plotear Gráficas
+.control
+    TRAN 1u 5m
+    gnuplot graf_tran_xps V(Vin) V(Vk)
+
+    dc Vz -40 40 0.1
+    gnuplot graf_dc_xps V(Vk)
+.endc
+
+.end
