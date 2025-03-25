@@ -32,8 +32,9 @@ DSD 3 10 DSUB
 VGS Vg 0 DC 6
 *Vp Vg 1 sin(0 20 2k 0)  
 X1  Vd Vg 0 DMWS120H100SM4 
-R1  V+ Vd 2k
-VDS V+ 0 DC 21
+R1  V1 V2 2k
+Vtest Vd V1 DC 0
+VDS V2 0 DC 21
 
 *Plotear Gráficas
 
@@ -43,8 +44,8 @@ VDS V+ 0 DC 21
 .endc
 
 .control
-    DC VDS 0 6 0.05 
-    gnuplot graf_Ivds -i(VDS)
+    DC VDS 0 2 0.001 
+    plot graf_Ivds i(Vtest)
 .endc
 
 * Región de Corte (𝑉𝐺𝑆<𝑉𝑡ℎ)
