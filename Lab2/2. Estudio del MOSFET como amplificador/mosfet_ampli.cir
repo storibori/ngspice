@@ -29,28 +29,40 @@ DSD 3 10 DSUB
 *The model is an approximation of the device, and it may not show the true device performance under all conditions.
 *The model only guarantees the accuracy of the key parameters (Ron, VSD, IDSS, Ciss, Coss, Crss, and Trr) at 25 degC in the current data sheet.
 
-VGS Vg 0 DC 6
-*Vp Vg 1 sin(0 20 2k 0)  
+VGS Vg 0 DC 6  
 X1  Vd Vg 0 DMWS120H100SM4 
-R1  V1 V2 2k
-Vtest Vd V1 DC 0
-VDS V2 0 DC 21
+*R1  Vdd VR1 2.0K
+Vmean Vdd Vd DC 0
+VDS Vdd 0 DC 21
+
+
+*Pto. de Operación
+.control
+    *VOLCADO FICHERO .CIR ANALIZADO SINTACTICAMENTE
+    listing > bjt.lst
+    *ANALISIS PUNTO DE OPERACION
+    op
+    rusage everything > op.ope
+    print V(Vd) V(Vg) > op.txt
+    display > op.var
+.endc
 
 *Plotear Gráficas
 
+* Obtener el valor de Vth
 .control
-    DC VGS 4 6 0.05 
-    gnuplot graf_Ivgs -i(VDS)
+    DC VGS 0 7 0.002
+    *gnuplot graf_Ivds i(Vtest)
 .endc
 
 .control
-    DC VDS 0 2 0.001 
-    plot graf_Ivds i(Vtest)
+    DC VGS 0 7 0.001
+    *gnuplot graf_Ivgs -i(VGS)
 .endc
 
 * Región de Corte (𝑉𝐺𝑆<𝑉𝑡ℎ)
 .control
-    DC VDS 0 1 0.01 VGS 0 4 0.5 
+    DC VGS 0 5 0.001 
     *gnuplot graf_R_Corte -i(VDS)
 .endc
 
@@ -58,12 +70,11 @@ VDS V2 0 DC 21
 * Región de Lineal (𝑉𝐺𝑆>𝑉𝑡ℎ y VDS< VGS−Vth)
 
 .control
-    DC VDS 0 40 0.01 VGS 0 1 0.5 
-    *gnuplot graf_R_Lineal -i(VDS)
+    DC VDS 0 5 0.01 VGS 0 6 0.5
+    gnuplot graf_R_Lineal -i(Vmean)
 .endc
 
 * Región de Saturación (VDS > VGS−Vth)
-
 
 .control
     DC VDS 0 40 0.01 VGS 0 1 0.5 
