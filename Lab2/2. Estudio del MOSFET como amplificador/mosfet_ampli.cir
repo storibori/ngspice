@@ -45,7 +45,7 @@ VDS V2 0 DC 21
 
 .control
     DC VDS 0 2 0.001 
-    plot graf_Ivds i(Vtest)
+    gnuplot graf_Ivds i(Vtest)
 .endc
 
 * Región de Corte (𝑉𝐺𝑆<𝑉𝑡ℎ)
