@@ -20,7 +20,7 @@ DDG 15 14 DCGD
 R2 12 15 1 
 D2 15 0 DLIM 
 DSD 3 10 DSUB 
-.MODEL NMOS NMOS LEVEL = 3 VMAX = 1E+05 ETA = 0 VTO = 4.8 TOX = 1E-07 NSUB = 8.792E+15 KP = 4.5 U0 = 100 KAPPA = 0.2 IS = 0 
+.MODEL NMOS NMOS LEVEL = 3 VMAX = 1E+05 ETA = 0 VTO = 0 TOX = 1E-07 NSUB = 8.792E+15 KP = 4.5 U0 = 100 KAPPA = 0.2 IS = 0 
 .MODEL DCGD D CJO = 6E-10 VJ = 0.6 M = 0.6913 
 .MODEL DSUB D IS = 3E-07 N = 8.6 RS = 0.03 BV = 1377 CJO = 1.5E-09 VJ = 0.9 M = 0.5 XTI = 0 TT = 4.94E-09 
 .MODEL DLIM D IS = 0.0001 
@@ -32,14 +32,13 @@ DSD 3 10 DSUB
 VGS Vg 0 DC 6  
 X1  Vd Vg 0 DMWS120H100SM4 
 *R1  Vdd VR1 2.0K
-Vmean Vdd Vd DC 0
-VDS Vdd 0 DC 21
+VDS Vd 0 DC 21
 
 
 *Pto. de Operación
 .control
     *VOLCADO FICHERO .CIR ANALIZADO SINTACTICAMENTE
-    listing > bjt.lst
+    listing > nmos.lst
     *ANALISIS PUNTO DE OPERACION
     op
     rusage everything > op.ope
@@ -49,35 +48,30 @@ VDS Vdd 0 DC 21
 
 *Plotear Gráficas
 
-* Obtener el valor de Vth
+****** T2.1 - ID vs VGS *****
 .control
-    DC VGS 0 7 0.002
-    *gnuplot graf_Ivds i(Vtest)
-.endc
-
-.control
-    DC VGS 0 7 0.001
-    *gnuplot graf_Ivgs -i(VGS)
+    DC VGS 0 10 0.01
+    gnuplot graf_Id_vs_VGS -i(VDS)
 .endc
 
 * Región de Corte (𝑉𝐺𝑆<𝑉𝑡ℎ)
 .control
+    * Verificar el valor de Vth
     DC VGS 0 5 0.001 
     *gnuplot graf_R_Corte -i(VDS)
 .endc
 
-
-* Región de Lineal (𝑉𝐺𝑆>𝑉𝑡ℎ y VDS< VGS−Vth)
-
+* Id VS VDS
+* Región de Lineal (𝑉𝐺𝑆>𝑉𝑡ℎ y VDS<VGS−Vth)
 .control
-    DC VDS 0 5 0.01 VGS 0 6 0.5
-    gnuplot graf_R_Lineal -i(Vmean)
+    DC VDS 0 10 0.01 VGS 2 11 0.5
+    gnuplot graf_Id_vs_VDS -i(VDS)
 .endc
 
 * Región de Saturación (VDS > VGS−Vth)
 
 .control
-    DC VDS 0 40 0.01 VGS 0 1 0.5 
+    DC VDS 0 40 0.001 VGS 0 1 0.5 
     *gnuplot graf_IVds1 -i(VDS)
 .endc
 
