@@ -50,8 +50,18 @@ VDS Vd 0 DC 21
 
 ****** T2.1 - ID vs VGS *****
 .control
+<<<<<<< HEAD
     DC VGS 0 10 0.01
     gnuplot graf_Id_vs_VGS -i(VDS)
+=======
+    DC VGS 4 6 0.05 
+    gnuplot graf_Ivgs -i(VDS)
+.endc
+
+.control
+    DC VDS 0 2 0.001 
+    gnuplot graf_Ivds i(Vtest)
+>>>>>>> 1ea4a9723354c1eaabc362ba424214adfd01794a
 .endc
 
 * Región de Corte (𝑉𝐺𝑆<𝑉𝑡ℎ)
