@@ -1,46 +1,52 @@
 import matplotlib.pyplot as plt
 import numpy as np
 
-# Función para leer los datos de los archivos .data
-def leer_datos(fichero):
-    datos = np.loadtxt(fichero)
-    return datos[:, 0], datos[:, 1]  # Retorna las dos columnas (Id, Vgs o Id, Vds)
+# Función para leer los datos de los archivos .data y separar bloques por líneas vacías
+def leer_datos_multiple(fichero):
+    with open(fichero, 'r') as file:
+        contenido = file.read()
+        
+    # Dividir en bloques de datos separados por líneas vacías
+    bloques = contenido.strip().split('\n\n')
+    
+    # Crear una lista para guardar los datos de cada bloque
+    datos = []
+    
+    for bloque in bloques:
+        # Leer cada bloque como una matriz de números
+        datos_bloque = np.loadtxt(bloque.splitlines())
+        datos.append(datos_bloque)
+    
+    return datos
 
 # Leer los datos de los dos archivos
-x_vgs, id_vgs = leer_datos('graf_id_vs_vgs.data')
-x_vds, id_vds = leer_datos('graf_id_vs_vds.data')
+bloques_vgs = leer_datos_multiple('graf_id_vs_vgs.data')
+bloques_vds = leer_datos_multiple('graf_id_vs_vds.data')
 
-# Crear una figura y un conjunto de ejes
-fig, ax = plt.subplots(2, 1, figsize=(8, 10))
+# Crear una figura para una única gráfica
+plt.figure(figsize=(8, 6))
 
-# Gráfica de Id vs Vgs
-ax[0].plot(x_vgs, id_vgs, label='Id vs Vgs', color='b')
-ax[0].set_title('Gráfica de Id vs Vgs')
-ax[0].set_xlabel('Vgs')
-ax[0].set_ylabel('Id')
-ax[0].grid(True)
+# Graficar los bloques de datos de Vgs con enumeradores en la leyenda
+for i, bloque in enumerate(bloques_vgs):
+    x_vgs = bloque[:, 0]
+    id_vgs = bloque[:, 1]
+    plt.plot(x_vgs, id_vgs, label=f'ID vs VGS', color='b')
 
-# Resaltar puntos que cortan el eje X (Id = 0)
-corte_x_vgs = x_vgs[np.isclose(id_vgs, 0, atol=1e-6)]  # Corta en Id=0
-ax[0].scatter(corte_x_vgs, np.zeros_like(corte_x_vgs), color='red', label='Corte en eje X', zorder=5)
+# Graficar los bloques de datos de Vds con enumeradores en la leyenda
+for i, bloque in enumerate(bloques_vds):
+    x_vds = bloque[:, 0]
+    id_vds = bloque[:, 1]
+    plt.plot(x_vds, id_vds, label=f'VGS {i}', color='g')
 
-# Gráfica de Id vs Vds
-ax[1].plot(x_vds, id_vds, label='Id vs Vds', color='g')
-ax[1].set_title('Gráfica de Id vs Vds')
-ax[1].set_xlabel('Vds')
-ax[1].set_ylabel('Id')
-ax[1].grid(True)
+# Etiquetas y título
+plt.title('Gráficas de Id vs Vgs y Id vs Vds')
+plt.xlabel('Voltaje (V)')
+plt.ylabel('Corriente (Id)')
+plt.grid(True)
 
-# Resaltar puntos que cortan el eje X (Id = 0)
-corte_x_vds = x_vds[np.isclose(id_vds, 0, atol=1e-6)]  # Corta en Id=0
-ax[1].scatter(corte_x_vds, np.zeros_like(corte_x_vds), color='red', label='Corte en eje X', zorder=5)
+# Añadir leyenda
+plt.legend()
 
-# Añadir leyenda a las gráficas
-ax[0].legend()
-ax[1].legend()
-
-# Ajustar el espacio entre las gráficas
+# Mostrar la gráfica
 plt.tight_layout()
-
-# Mostrar las gráficas
 plt.show()
