@@ -20,8 +20,8 @@ def leer_datos_multiple(fichero):
     return datos
 
 # Leer los datos de los dos archivos
-bloques_vgs = leer_datos_multiple('graf_id_vs_vgs.data')
-bloques_vds = leer_datos_multiple('graf_id_vs_vds.data')
+bloques_vgs = leer_datos_multiple('graf_id_vs_vgs_e-mosfet.data')
+bloques_vds = leer_datos_multiple('graf_id_vs_vds_e-mosfet.data')
 
 # Crear una figura para una única gráfica
 plt.figure(figsize=(8, 6))

@@ -38,12 +38,12 @@ VDS Vd 0 DC 21
 *Pto. de Operación
 .control
     *VOLCADO FICHERO .CIR ANALIZADO SINTACTICAMENTE
-    listing > nmos.lst
+    listing > e-mosfet.lst
     *ANALISIS PUNTO DE OPERACION
     op
-    rusage everything > op.ope
-    print V(Vd) V(Vg) > op.txt
-    display > op.var
+    rusage everything > op_e-mosfet.ope
+    print V(Vd) V(Vg) > op_e-mosfet.txt
+    display > op_e-mosfet.var
 .endc
 
 *Plotear Gráficas
@@ -51,7 +51,7 @@ VDS Vd 0 DC 21
 ****** T2.1 - ID vs VGS *****
 .control
     DC VGS 0 10 0.01
-    gnuplot graf_Id_vs_VGS -i(VDS)
+    gnuplot graf_Id_vs_VGS_e-mosfet -i(VDS)
 .endc
 
 * Región de Corte (𝑉𝐺𝑆<𝑉𝑡ℎ)
