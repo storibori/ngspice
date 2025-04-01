@@ -13,7 +13,7 @@
     20 : display > op_de-mosfet.var
     21 : .endc
     26 : .control
-    27 : dc vgs -2 0.5 0.01
+    27 : dc vgs -2 2 0.01
     28 : gnuplot graf_id_vs_vgs_de-mosfet -i(vds)
     29 : .endc
     32 : .control

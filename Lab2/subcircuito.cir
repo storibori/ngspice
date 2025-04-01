@@ -12,7 +12,6 @@ Xps Vin Vk 0 protector_sobretension
 
 * Análisis de Transitorio
 
-
 *Plotear Gráficas
 .control
     TRAN 1u 5m
