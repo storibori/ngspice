@@ -1,39 +1,36 @@
-* Simulación de mosfet como amplificador
-
-*---------- DMWS120H100SM4 Spice Model ----------
-.SUBCKT DMWS120H100SM4 10 20 30 
-* TERMINALS : D G S
-* MODEL FORMAT : SPICE3
-* Editor : JAY
-M1 1 2 3 3 NMOS L = 1E-06 W = 1E-06 
-RD 10 1 0.055 
-RS 30 3 1E-06 
-RG 20 2 8.26 
-CGS 2 3 1.53E-09 
-EGD 12 0 2 1 1 
-VFB 14 0 0 
-FFB 2 1 VFB 1 
-CGD 13 14 1.323E-09 
-R1 13 0 1 
-D1 12 13 DLIM 
-DDG 15 14 DCGD 
-R2 12 15 1 
-D2 15 0 DLIM 
-DSD 3 10 DSUB 
-.MODEL NMOS NMOS LEVEL = 3 VMAX = 1E+05 ETA = 0 VTO = -1 TOX = 1E-07 NSUB = 8.792E+15 KP = 4.5 U0 = 100 KAPPA = 0.2 IS = 0 
-.MODEL DCGD D CJO = 6E-10 VJ = 0.6 M = 0.6913 
-.MODEL DSUB D IS = 3E-07 N = 8.6 RS = 0.03 BV = 1377 CJO = 1.5E-09 VJ = 0.9 M = 0.5 XTI = 0 TT = 4.94E-09 
-.MODEL DLIM D IS = 0.0001 
-.ENDS
-*Diodes Spice Model v1.2 Last Revised 2023/01/10
-*The model is an approximation of the device, and it may not show the true device performance under all conditions.
-*The model only guarantees the accuracy of the key parameters (Ron, VSD, IDSS, Ciss, Coss, Crss, and Trr) at 25 degC in the current data sheet.
+* SIMULATION DE-MOSFET NMOS MODEL
 
 VGS Vg 0 DC 6  
-X1  Vd Vg 0 DMWS120H100SM4 
+M1  Vd Vg 0 0 IXTT20N50D 
 *R1  Vdd Vd 1
 VDS Vd 0 DC 21
 
+*---------- IXTT20N50D Spice Model ----------
+
+* IXTT20N50D Depletion NMOS model
+* updated using Model Editor release 10.0.0 on 04/03/06 at 12:17
+* The Model Editor is a PSpice product.
+.MODEL IXTT20N50D NMOS M
++ LEVEL=3
++ L=2.0000E-6
++ W=5.5000
++ KP=1.0446E-6
++ RS=1.0000E-3
++ RD=.22202
++ VTO=-1
++ RDS=20.000E6
++ TOX=2.0000E-6
++ CGSO=6.3E-9
++ CGDO=82E-12
++ CBD=4.8729E-9
++ MJ=1.5000
++ PB=2.6055
++ RG=10.000E-3
++ IS=25E-6
++ N=2.0283
++ RB=1.0000E-9
++ GAMMA=0
++ KAPPA=0
 
 *Pto. de Operación
 .control
@@ -48,28 +45,26 @@ VDS Vd 0 DC 21
 
 *Plotear Gráficas
 
-****** T2.2 - ID vs VGS *****
+****** T2.2 *****
 
 * Región de Corte (𝑉𝐺𝑆<𝑉𝑡ℎ)
-* Verificar el valor de Vth
+* - ID vs VGS (Verificar el valor de Vth)
 .control
-    DC VGS -2 10 0.01
+    DC VGS -2 0.5 0.01
     gnuplot graf_Id_vs_VGS_de-mosfet -i(VDS)
 .endc
 
-
-* Id VS VDS
 * Región de Lineal (𝑉𝐺𝑆>𝑉𝑡ℎ y VDS<VGS−Vth)
+* - Id VS VDS
 .control
-    DC VDS -2 10 0.01 VGS -2 2 0.5
+    DC VDS 0 10 0.05 VGS -2 2 0.5
     gnuplot graf_Id_vs_VDS_de-mosfet -i(VDS)
 .endc
 
 * Región de Saturación (VDS > VGS−Vth)
-
 .control
-    DC VDS 0 40 0.001 VGS 0 1 0.5 
-    *gnuplot graf_IVds1 -i(VDS)
+    DC VDS 0 40 0.1 VGS -1 2 0.5 
+    gnuplot graf_Saturacion_de-mosfet -i(VDS)
 .endc
 
 .end
