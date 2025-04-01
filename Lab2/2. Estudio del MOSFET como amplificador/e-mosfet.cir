@@ -1,4 +1,4 @@
-* Simulación de mosfet como amplificador
+* SIMULATION E-MOSFET NMOS MODEL
 
 *---------- DMWS120H100SM4 Spice Model ----------
 .SUBCKT DMWS120H100SM4 10 20 30 
@@ -20,7 +20,7 @@ DDG 15 14 DCGD
 R2 12 15 1 
 D2 15 0 DLIM 
 DSD 3 10 DSUB 
-.MODEL NMOS NMOS LEVEL = 3 VMAX = 1E+05 ETA = 0 VTO = 0 TOX = 1E-07 NSUB = 8.792E+15 KP = 4.5 U0 = 100 KAPPA = 0.2 IS = 0 
+.MODEL NMOS NMOS LEVEL = 3 VMAX = 1E+05 ETA = 0 VTO = 4.8 TOX = 1E-07 NSUB = 8.792E+15 KP = 4.5 U0 = 100 KAPPA = 0.2 IS = 0 
 .MODEL DCGD D CJO = 6E-10 VJ = 0.6 M = 0.6913 
 .MODEL DSUB D IS = 3E-07 N = 8.6 RS = 0.03 BV = 1377 CJO = 1.5E-09 VJ = 0.9 M = 0.5 XTI = 0 TT = 4.94E-09 
 .MODEL DLIM D IS = 0.0001 
@@ -31,7 +31,7 @@ DSD 3 10 DSUB
 
 VGS Vg 0 DC 6  
 X1  Vd Vg 0 DMWS120H100SM4 
-*R1  Vdd VR1 2.0K
+*R1  Vdd Vd 1
 VDS Vd 0 DC 21
 
 
@@ -48,31 +48,26 @@ VDS Vd 0 DC 21
 
 *Plotear Gráficas
 
-****** T2.1 - ID vs VGS *****
+****** T2.1 *****
+
+* Región de Corte (𝑉𝐺𝑆<𝑉𝑡ℎ)
+* - ID vs VGS (Verificar el valor de Vth)
 .control
-    DC VGS 0 10 0.01
+    DC VGS 0 12 0.01
     gnuplot graf_Id_vs_VGS_e-mosfet -i(VDS)
 .endc
 
-* Región de Corte (𝑉𝐺𝑆<𝑉𝑡ℎ)
-.control
-    * Verificar el valor de Vth
-    DC VGS 0 5 0.001 
-    *gnuplot graf_R_Corte -i(VDS)
-.endc
-
-* Id VS VDS
 * Región de Lineal (𝑉𝐺𝑆>𝑉𝑡ℎ y VDS<VGS−Vth)
+* - Id VS VDS
 .control
-    DC VDS 0 10 0.01 VGS 0 11 0.5
-    gnuplot graf_Id_vs_VDS -i(VDS)
+    DC VDS 0 20 0.01 VGS 4.5 10 0.5
+    gnuplot graf_Id_vs_VDS_e-mosfet -i(VDS)
 .endc
 
 * Región de Saturación (VDS > VGS−Vth)
-
 .control
-    DC VDS 0 40 0.001 VGS 0 1 0.5 
-    *gnuplot graf_IVds1 -i(VDS)
+    DC VDS 0 40 0.001 VGS 4.5 12 0.5 
+    gnuplot graf_Saturacion_e-mosfet -i(VDS)
 .endc
 
 .end
